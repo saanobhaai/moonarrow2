@@ -1,0 +1,11 @@
+{
+  "name": "moonarrow2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/saanobhaai/moonarrow2.git",
+  "license": "MIT",
+  "dependencies": {
+    "johnny-five": "^1.0.0",
+    "suncalc": "^1.8.0"
+  }
+}
