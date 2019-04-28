@@ -27,20 +27,14 @@ config.DEGREES2SECONDS_ALTITUDE_CW = 0.0065;
 config.DEGREES2SECONDS_ALTITUDE_CCW = 0.0065;  // 0.0055;
 config.SPEED_ALTITUDE_CW = 0.19;
 config.SPEED_ALTITUDE_CCW = 0.19;
-//~ config.SPEED_ALTITUDE_CW = 0.19;
-//~ config.SPEED_ALTITUDE_CCW = 0.15;
+
+config.LIGHT_PIN = 6;
+config.LIGHT_BRIGHTNESS = 128;  // 0-255
+config.LIGHT_FADE = 1 * 60 * 1000;  // ms to fade in/out
+config.LIGHT_INTERVAL = 60 * 1000;
 
 config.LAT = 40.769200;  // 40.760248; (B6)
 config.LON = -73.936672;  // -73.929272; (B6)
-
-config.LIGHT_STRIPS = [ {pin: 6, length: 60}, ];
-config.LIGHT_INTERVAL = 60 * 1000;
-config.LIGHT_COLOR = Color.rgb(128, 128, 128);  // 1/2 max
-//~ config.LIGHT_COLOR = Color.rgb(255, 255, 255);  // full white
-//~ config.LIGHT_COLOR = Color.rgb(64, 64, 64);  // 1/4 max
-// dimmest: Color.rgb(28, 28, 28)
-//~ config.LIGHT_COLOR = Color('#333');
-//~ config.LIGHT_COLOR.lighten(0.2);
 
 module.exports = config;
 
@@ -64,3 +58,12 @@ module.exports = config;
 //~ config.RPM_ALTITUDE = 180;
 //~ config.DEGREES2STEPS_AZIMUTH = 2100;  // would be 0.5555 without gearing
 //~ config.DEGREES2STEPS_ALTITUDE = 360;
+
+// abortive neopixel settings
+//~ config.LIGHT_STRIPS = [ {pin: 6, length: 60}, ];
+//~ config.LIGHT_COLOR = Color.rgb(128, 128, 128);  // 1/2 max
+//~ config.LIGHT_COLOR = Color.rgb(255, 255, 255);  // full white
+//~ config.LIGHT_COLOR = Color.rgb(64, 64, 64);  // 1/4 max
+// dimmest: Color.rgb(28, 28, 28)
+//~ config.LIGHT_COLOR = Color('#333');
+//~ config.LIGHT_COLOR.lighten(0.2);

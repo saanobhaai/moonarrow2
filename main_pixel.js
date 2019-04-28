@@ -1,6 +1,7 @@
 var events = require('events');
 var suncalc = require('suncalc');  // https://github.com/mourner/suncalc
 var five = require("johnny-five");  // http://johnny-five.io/
+var pixel = require("node-pixel");  // https://github.com/ajfisher/node-pixel
 const config = require('./config');
 
 console.info("Initializing port...");
@@ -34,8 +35,11 @@ var Arrow = function() {
   //~ console.log("azi startAt: " + this.servo_azimuth.startAt);
   //~ console.log("alt startAt: " + this.servo_altitude.startAt);
 
-  this.light = new five.Led({
-      pin: config.LIGHT_PIN
+  this.light = new pixel.Strip({
+      board: board,
+      controller: "FIRMATA",
+      strips: config.LIGHT_STRIPS,
+      gamma: 2.8, // set to a gamma that works nicely for WS2812
   });
 };
 
@@ -196,10 +200,11 @@ var setLight = function() {
     let light_ends = suntimes['goldenHour'].getTime();  // evening golden hour starts
     if (!(now.getTime() > light_begins && now.getTime() < light_ends)) {
       console.log("nighttime: turning lights on");
-      arrow.light.fade(config.LIGHT_BRIGHTNESS, config.LIGHT_FADE);
-    } else {
+      arrow.light.color(config.LIGHT_COLOR.string());
+      arrow.light.show();
+    } else{
       console.log("daytime: turning lights off");
-      arrow.light.fade(0, config.LIGHT_FADE);
+      arrow.light.off();
     }
   }, config.LIGHT_INTERVAL);
 };
@@ -216,15 +221,16 @@ var manualControl = function(testDegrees) {
     }
     if (key.name === "q") {
       console.log("Quitting");
-      arrow.light.fade(0, config.LIGHT_FADE);
+      arrow.light.off();
       setTimeout(process.exit, 1000);
       //~ process.exit();
     } else if (key.sequence === ",") {
-      console.log("turning lights on");
-      arrow.light.fade(config.LIGHT_BRIGHTNESS, config.LIGHT_FADE);
+      console.log(config.LIGHT_COLOR);
+      arrow.light.color(config.LIGHT_COLOR.string());
+      arrow.light.show();
     } else if (key.sequence === ".") {
       console.log("turning lights off");
-      arrow.light.fade(0, config.LIGHT_FADE);
+      arrow.light.off();
     } else if (key.name === "up") {
       console.log("alt CW " + testDegrees + " degrees");
       arrow.moveDegrees('altitude', testDegrees, config.CW_ALTITUDE, config.SPEED_ALTITUDE_CW);
@@ -291,20 +297,21 @@ var testIMU = function() {
 var arrow = null;
 board.on("ready", function() {
   arrow = new Arrow();
-  arrow.imu.on("data", function() {
-    arrow.azimuth = Math.floor(arrow.imu.orientation.euler.heading);
-    arrow.altitude = -Math.floor(arrow.imu.orientation.euler.pitch);
-    console.log("azimuth: " + arrow.azimuth + " altitude: " + arrow.altitude);
-  });
+  //~ arrow.imu.on("data", function() {
+    //~ arrow.azimuth = Math.floor(arrow.imu.orientation.euler.heading);
+    //~ arrow.altitude = -Math.floor(arrow.imu.orientation.euler.pitch);
+    //~ console.log("azimuth: " + arrow.azimuth + " altitude: " + arrow.altitude);
+  //~ });
 
   manualControl();  // optional testDegrees argument: manualControl(90);
-  console.log("Please calibrate in the next " + (config.INIT_CALIBRATION_INTERVAL / 1000) + " seconds.");
-  setLight();
-  setTimeout(function() {
-    trackMoon();
-  }, config.INIT_CALIBRATION_INTERVAL);
+  //~ console.log("Please calibrate in the next " + (config.INIT_CALIBRATION_INTERVAL / 1000) + " seconds.");
+  //~ setLight();
+  //~ setTimeout(function() {
+    //~ trackMoon();
+  //~ }, config.INIT_CALIBRATION_INTERVAL);
   
   //~ testIMU();
+  //~ testServos();
 });
 
 board.on("message", function(event) {
