@@ -29,9 +29,11 @@ config.SPEED_ALTITUDE_CW = 0.19;
 config.SPEED_ALTITUDE_CCW = 0.19;
 
 config.LIGHT_PIN = 6;
-config.LIGHT_BRIGHTNESS = 128;  // 0-255
-config.LIGHT_FADE = 1 * 60 * 1000;  // ms to fade in/out
+config.LIGHT_BRIGHTNESS = 64;  // 0-255
+config.LIGHT_FADE = 1 * 10 * 1000;  // ms to fade in/out
 config.LIGHT_INTERVAL = 60 * 1000;
+config.LIGHT_NIGHT_SAVER = true;
+config.LIGHT_NIGHT_OFF = 23;  // absolute hour in local timezone to turn lights off
 
 config.LAT = 40.769200;  // 40.760248; (B6)
 config.LON = -73.936672;  // -73.929272; (B6)

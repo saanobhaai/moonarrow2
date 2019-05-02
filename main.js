@@ -12,6 +12,15 @@ function radians2Degrees(angle) {
   return angle * (180 / Math.PI);
 }
 
+function get_turnoff_time(now) {
+  //~ let tzoffset = now.getTimezoneOffset() / 60;
+  let turnoff_time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), config.LIGHT_NIGHT_OFF);
+  if (config.LIGHT_NIGHT_OFF < 12) {
+    turnoff_time.setDate(turnoff_time.getDate() + 1);
+  }
+  
+  return turnoff_time;
+}
 
 var Arrow = function() {
   this.servo_azimuth = new five.Servo.Continuous({
@@ -191,12 +200,24 @@ var setLight = function() {
   var lightInterval = setInterval(function() {
     let now = new Date();
     let suntimes = suncalc.getTimes(now, config.LAT, config.LON);
-    //~ console.log(suntimes);
+    //~ console.log("goldenHour: " + suntimes['goldenHour']);
     let light_begins = suntimes['goldenHourEnd'].getTime();  // morning golden hour ends
     let light_ends = suntimes['goldenHour'].getTime();  // evening golden hour starts
+    
+    //~ console.log("now: " + now);
     if (!(now.getTime() > light_begins && now.getTime() < light_ends)) {
-      console.log("nighttime: turning lights on");
-      arrow.light.fade(config.LIGHT_BRIGHTNESS, config.LIGHT_FADE);
+      // late-night turn off, if configured
+      let turnofftime = get_turnoff_time(now);
+      //~ console.log("turnoff time: " + turnofftime);
+      if (typeof config.LIGHT_NIGHT_SAVER !== undefined 
+          && config.LIGHT_NIGHT_SAVER === true 
+          && now.getTime() > turnofftime.getTime()) {
+        console.log("late night: turning lights off");
+        arrow.light.fade(0, config.LIGHT_FADE);
+      } else {
+        console.log("nighttime: turning lights on");
+        arrow.light.fade(config.LIGHT_BRIGHTNESS, config.LIGHT_FADE);
+      }
     } else {
       console.log("daytime: turning lights off");
       arrow.light.fade(0, config.LIGHT_FADE);
