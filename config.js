@@ -12,7 +12,7 @@ config.CW_ALTITUDE = 0;
 config.CCW_AZIMUTH = 1;
 config.CCW_ALTITUDE = 1;
 
-config.INIT_CALIBRATION_INTERVAL = 60 * 1000;
+config.INIT_CALIBRATION_INTERVAL = 120 * 1000;
 config.INTERVAL = 10 * 1000;
 config.MOVEMENT_THRESHOLD_AZI = 0.1;  // under this # of seconds, don't move
 config.MOVEMENT_THRESHOLD_ALT = 0.001;
@@ -29,7 +29,7 @@ config.SPEED_ALTITUDE_CW = 0.19;
 config.SPEED_ALTITUDE_CCW = 0.19;
 
 config.LIGHT_PIN = 6;
-config.LIGHT_BRIGHTNESS = 64;  // 0-255
+config.LIGHT_BRIGHTNESS = 128;  // 0-255
 config.LIGHT_FADE = 1 * 10 * 1000;  // ms to fade in/out
 config.LIGHT_INTERVAL = 60 * 1000;
 config.LIGHT_NIGHT_SAVER = true;
@@ -37,6 +37,9 @@ config.LIGHT_NIGHT_OFF = 23;  // absolute hour in local timezone to turn lights 
 
 config.LAT = 40.769200;  // 40.760248; (B6)
 config.LON = -73.936672;  // -73.929272; (B6)
+
+config.logfile = "/home/pi/Documents/moonarrow2/log.csv";
+config.ts_format = "yyyy-mm-dd HH:MM:ss";
 
 module.exports = config;
 

@@ -1,4 +1,7 @@
 var events = require('events');
+const fs = require('fs');
+const os = require('os');
+var dateFormat = require('dateformat');
 var suncalc = require('suncalc');  // https://github.com/mourner/suncalc
 var five = require("johnny-five");  // http://johnny-five.io/
 const config = require('./config');
@@ -21,6 +24,22 @@ function get_turnoff_time(now) {
   
   return turnoff_time;
 }
+
+function log_positions(positions) {
+  fs.stat(config.logfile, function (err, stat) {
+    if (err != null) {
+      let header = ["timestamp", "moon_azimuth", "moon_altitude", "arrow.azimuth", "compass_heading", "arrow.altitude"];
+      fs.writeFile(config.logfile, header.join() + os.EOL, 'utf8', function (err, stat) {
+          if (err) throw err;
+      });
+    }
+
+    fs.appendFile(config.logfile, positions.join() + os.EOL, 'utf8', function (err) {
+      if (err) throw err;
+    });
+  });
+}
+
 
 var Arrow = function() {
   this.servo_azimuth = new five.Servo.Continuous({
@@ -177,6 +196,9 @@ var trackMoon = function() {
       console.log('----- ' + now + ' -----');
       console.log('moon  azimuth: ' + moon_azimuth  + ' moon altitude:  ' + moon_altitude);
       console.log('arrow azimuth: ' + arrow.azimuth + ' arrow altitude: ' + arrow.altitude);
+      let compass_heading = Math.floor(arrow.imu.magnetometer.heading);
+      let positions = [dateFormat(now, config.ts_format), moon_azimuth, moon_altitude, arrow.azimuth, compass_heading, arrow.altitude];
+      log_positions(positions);
 
       if (!arrow.moving_azimuth) {
         //~ console.log("start azimuth: " + arrow.azimuth);
@@ -325,7 +347,7 @@ board.on("ready", function() {
     trackMoon();
   }, config.INIT_CALIBRATION_INTERVAL);
   
-  //~ testIMU();
+  testIMU();
 });
 
 board.on("message", function(event) {
