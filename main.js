@@ -337,7 +337,7 @@ board.on("ready", function() {
   arrow.imu.on("data", function() {
     arrow.azimuth = Math.floor(arrow.imu.orientation.euler.heading);
     arrow.altitude = -Math.floor(arrow.imu.orientation.euler.pitch);
-    console.log("azimuth: " + arrow.azimuth + " altitude: " + arrow.altitude);
+    //~ console.log("azimuth: " + arrow.azimuth + " altitude: " + arrow.altitude);
   });
 
   manualControl();  // optional testDegrees argument: manualControl(90);
@@ -347,7 +347,7 @@ board.on("ready", function() {
     trackMoon();
   }, config.INIT_CALIBRATION_INTERVAL);
   
-  testIMU();
+  //~ testIMU();
 });
 
 board.on("message", function(event) {
